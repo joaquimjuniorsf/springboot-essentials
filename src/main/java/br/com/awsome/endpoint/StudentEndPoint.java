@@ -1,16 +1,11 @@
 package br.com.awsome.endpoint;
 
-import br.com.awsome.exceptions.ResponseException;
 import br.com.awsome.model.Student;
-import br.com.awsome.util.DateUtil;
+import br.com.awsome.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -18,30 +13,16 @@ import java.util.List;
 public class StudentEndPoint {
 
     @Autowired
-    private final DateUtil dateUtil;
-
-    public StudentEndPoint(DateUtil dateUtil) {
-        this.dateUtil = dateUtil;
-    }
+    private StudentService studentService;
 
     @GetMapping(path = "/list")
-    public ResponseEntity<List<Student>> listAll(){
+    public ResponseEntity<List<Student>> getStudentByName(@RequestParam(value = "name") String name) {
 
-        return ResponseEntity.ok().body(Student.studentList);
+        return ResponseEntity.ok().body(studentService.findByName(name));
     }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<List<Student>> getStudentById(@PathVariable("id") int id){
-        List<Student> students = Student.studentList;
-
-        Student s = new Student();
-        s.setId(id);
-        int i = Student.studentList.indexOf(s);
-
-        if (i < 0){
-            throw new ResponseException("Student not found");
-        }
-
-        return ResponseEntity.ok().body(Arrays.asList(Student.studentList.get(i)));
+    @PostMapping(path = "/save")
+    public ResponseEntity<Student> setStudent(@RequestBody Student student){
+        return ResponseEntity.ok().body(studentService.save(student));
     }
 }
