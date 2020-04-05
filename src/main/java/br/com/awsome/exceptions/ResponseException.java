@@ -1,14 +1,11 @@
 package br.com.awsome.exceptions;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class ResponseException extends RuntimeException{
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ResponseException extends RuntimeException {
     public ResponseException(String msg) {
         super(msg);
-    }
-
-    public ResponseException(String msg,Throwable cause) {
-        super(msg,cause);
     }
 }
